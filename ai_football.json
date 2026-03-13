@@ -1,0 +1,115 @@
+{
+  "name": "ai_football",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! ⚽\nSaya adalah Football Assistant Bot.\n\nSaya bisa membantu menjelaskan:\n- Aturan sepak bola\n- Pemain terkenal\n- Klub sepak bola dunia\n- Istilah dalam sepak bola\n\nSilakan tanyakan apa saja tentang sepak bola",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "360d045e-aada-4154-8c15-21913c684779",
+      "name": "When chat message received",
+      "webhookId": "a97fa9fe-451e-4d81-8462-393f9a325189"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## Role\nKamu adalah AI Football Assistant yang ramah dan membantu.\n\n## Task\nTugasmu adalah menjawab pertanyaan pengguna tentang sepak bola seperti:\n- aturan permainan sepak bola\n- pemain sepak bola terkenal\n- klub sepak bola dunia\n- istilah dalam sepak bola\n- sejarah singkat sepak bola\n\n## Constraints\n- Gunakan bahasa Indonesia yang mudah dipahami.\n- Jawaban maksimal sekitar 150 kata.\n- Jika pengguna bertanya di luar topik sepak bola, jawab dengan sopan bahwa chatbot hanya membahas sepak bola.\n- Jangan mengarang informasi yang tidak kamu ketahui.\n\n## Tone\nGunakan gaya bahasa yang ramah, santai, dan informatif.\nGunakan emoji secukupnya seperti ⚽ atau 🏆.\n\n## Example\n\nUser: Apa itu offside?\nBot: Offside adalah aturan dalam sepak bola yang terjadi ketika pemain penyerang berada lebih dekat ke gawang lawan dibandingkan bola dan pemain bertahan terakhir saat bola diberikan kepadanya.\n\nUser: Siapa Lionel Messi?\nBot: Lionel Messi adalah pemain sepak bola asal Argentina yang dianggap sebagai salah satu pemain terbaik sepanjang sejarah. Ia pernah bermain lama di Barcelona dan sekarang bermain di Inter Miami."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "de26b75d-d26c-475f-ba95-49c3375f1c74",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        208,
+        208
+      ],
+      "id": "c413990f-659f-4b48-b3f8-6eb58b6ceb62",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PuX4CnFmjywGMkH5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        240
+      ],
+      "id": "6556db24-8ce4-45d1-909d-d7d32a12dd46",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e481259d-3c23-43cb-a726-dfb5e8126d91",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e8987868def84b87053eb5ad4ad2a6ede4f62b15a5439278b94f189e109fc154"
+  },
+  "id": "snuizlZMuTiafiuC",
+  "tags": []
+}
