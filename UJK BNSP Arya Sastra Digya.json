@@ -1,0 +1,287 @@
+{
+  "name": "UJK BNSP Arya Sastra Digya",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "09996303-5fec-4e9c-a4b0-d7285b6cdc14",
+      "name": "Telegram Trigger",
+      "webhookId": "a7e57f2d-154a-4133-9915-64fe7b4288aa",
+      "credentials": {
+        "telegramApi": {
+          "id": "TIp5amVCGWhE0UOs",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "=Pertanyaan yang anda kirimkan tidak sesuai, harap gunakan pertanyaan di bawah ini:\n1.Bagaimana prosedur reimbursement?\n2.Prosedur pengajuan cuti tahunan\n3.Bagaimana aturan lembur di perusahaan?\n4.Apa syarat klaim asuransi kesehatan?\n5.Bagaimana prosedur perintah alat kerja baru?",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        96
+      ],
+      "id": "3ad3470f-3b8e-4b7a-a355-e5c3c3fb2040",
+      "name": "False Output",
+      "webhookId": "517da64c-0003-41f6-9010-25362c8ccd4b",
+      "credentials": {
+        "telegramApi": {
+          "id": "TIp5amVCGWhE0UOs",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c9a124b0-aac7-4e30-9906-cf2caaaba8fe",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "Bagaimana prosedur reimbursement?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "7581e978-c2f3-4cc0-b6c7-131f77b87737",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "Prosedur pengajuan cuti tahunan",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ed4a4e69-217b-41fd-99bb-bc43928e7d23",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "Bagaimana aturan lembur di perusahaan?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ef9e30d2-003b-4646-9ed5-61f524a99ec7",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "Apa syarat klaim asuransi kesehatan?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "1720d7ce-099e-4786-9e5e-75fc5a61cc96",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "Bagaimana prosedur perintah alat kerja baru?",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7c947536-1461-485c-900e-35391bb748b3",
+      "name": "Memastikan sesuai format"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Pertanyaan pengguna:\n{{ $('Telegram Trigger').item.json.message.text }}\nAnda adalah AI Agent yang bertugas menjawab pertanyaan terkait Standar Operasional Prosedur (SOP) perusahaan.\n\nATURAN KERAS:\n1. Jawaban hanya boleh berdasarkan data yang tersedia pada Google Sheets.\n2. Dilarang membuat atau mengarang jawaban di luar data.\n3. Jika jawaban tidak ditemukan dalam data, balas dengan: \"Maaf, data SOP tidak ditemukan.\"\n4. Gunakan bahasa Indonesia yang formal dan jelas.\n5. Jawaban harus singkat, relevan, dan sesuai dengan pertanyaan pengguna.\n\nTugas:\n- Memahami pertanyaan pengguna\n- Mencari jawaban pada data SOP (Google Sheets)\n- Memberikan jawaban yang akurat sesuai data",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        768,
+        -16
+      ],
+      "id": "f03d5846-ca85-4211-a1f6-569f17c27b65",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        768,
+        224
+      ],
+      "id": "ebfaeff0-a3a0-46fa-93af-ea83e1fb8040",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "ABqeDjpFtrp3EnzR",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Av7ZQ1VPreap1Rs-9mz8Z1-eVvTQlobkSgHgW91cH58",
+          "mode": "list",
+          "cachedResultName": "Data Pertanyaan untuk Karyawan",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Av7ZQ1VPreap1Rs-9mz8Z1-eVvTQlobkSgHgW91cH58/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 408468709,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Av7ZQ1VPreap1Rs-9mz8Z1-eVvTQlobkSgHgW91cH58/edit#gid=408468709"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        192
+      ],
+      "id": "0d2b7d2c-7f79-4e1c-81ed-1b6a19502dfe",
+      "name": "Data  Pertanyaan",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "tufnS0ESpeioX0Qd",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        -16
+      ],
+      "id": "0aea7eb7-0ce2-431f-bfcf-cce943410d86",
+      "name": "True Ouput",
+      "webhookId": "dc071af0-dd33-47ee-b2cc-41236b974075",
+      "credentials": {
+        "telegramApi": {
+          "id": "TIp5amVCGWhE0UOs",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Memastikan sesuai format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memastikan sesuai format": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "False Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data  Pertanyaan": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "True Ouput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1f80d59e-bbe7-4e86-a372-6f43b795412d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4174637e89bc262bd3660b9c8822afb344e83a8b137f4b57ccd4c7f0fcad64d5"
+  },
+  "id": "iYmFL32XrgPwm4IZ",
+  "tags": []
+}
